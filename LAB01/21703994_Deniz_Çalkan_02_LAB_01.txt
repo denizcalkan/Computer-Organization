@@ -1,0 +1,440 @@
+﻿#CS224
+#Lab NO: 01
+#Section: 02
+#Name: Deniz Çalkan
+#Id: 21703994
+
+
+
+
+#A program that decides whether a given array is a palindrome or not.
+.data
+        array: .space 80
+        reversedArray: .space 80
+        message1: .asciiz "Enter the array size: "
+        message2: .asciiz "Enter the item: "
+        message3: .asciiz "\nThe array is a palindrome!"
+        message4: .asciiz "\nThe array is NOT a palindrome!"
+        
+.text
+        main:
+                #Print message1
+                 li $v0, 4
+                la $a0, message1
+                syscall
+
+
+                #Get users response for message1
+                li $v0, 5
+                syscall
+
+
+                #Store the response in $t0 (array size)
+                move $t0, $v0
+
+
+                #Create a counter 
+                addi $t1, $zero, 0
+                
+                #Create another counter for index 
+                addi $t2, $zero, 0
+
+
+                #Fill the array with the user input
+                while1:  beq  $t1, $t0, end1
+                        
+                        #Print message2
+                         li $v0, 4
+                        la $a0, message2
+                        syscall
+
+
+                        #Get users response for message2 (items)
+                        li $v0, 5
+                        syscall
+                
+                        #Store the response in $t3 (item)
+                        move $t3, $v0
+                        
+                        #Store item that $t3 holds to the index where $t2 points to
+                        sw $t3, array($t2)
+                        
+                        #Increment $t2 by 4 so that it points to the next index
+                        addi $t2, $t2, 4
+                        
+                        #Increment $t1 by 1 
+                        addi $t1, $t1, 1
+                        
+                        j while1
+                        
+                end1:
+                                
+                #Reset counter
+                addi $t1, $zero, 0
+                
+                #Reset counter
+                addi $t2, $zero, 0
+                
+                #Reset counter
+                addi $t3, $zero, 0
+                
+                #Display array contents
+                while2: beq $t1, $t0, end2
+                        lw $t3, array($t2)
+                       
+                        #print
+                        li $v0, 1
+                        move $a0, $t3
+                        syscall
+                       
+                        #Increment $t2 by 4 so that it points to the next index
+                        addi $t2, $t2, 4
+                        
+                        #Increment $t1 by 1 
+                        addi $t1, $t1, 1
+                        
+                        j while2
+                end2:
+                
+                #Reset counter
+                addi $t1, $zero, 0
+                
+                #Decrement $t2 by 4 so that it points to the last item in the array
+                addi $t2, $t2, -4
+                
+                #Reset counter
+                addi $t3, $zero, 0
+                
+                #Create a counter for the reversedArray
+                addi $t4, $zero, 0
+                
+                #Reverse the array         
+                while3: beq $t1, $t0, end3
+                        
+                        lw $t3, array($t2)
+                        sw $t3, reversedArray($t4)
+                
+                        #Decrement $t2 by 4 so that it points to the previous index
+                        addi $t2, $t2, -4
+                        
+                        #Increment $t4 by 4 so that it points to the next index
+                        addi $t4, $t4, 4
+                        
+                        #Increment $t1 by 1 
+                        addi $t1, $t1, 1
+                        
+                        j while3
+                end3:
+                
+                #Reset counter
+                addi $t1, $zero, 0
+                
+                #Reset counter
+                addi $t2, $zero, 0
+                
+                
+                #Compare the arrays
+                while4: beq $t1, $t0, end4
+                        lw  $t6, array($t2)
+                        lw  $t7, reversedArray($t2)
+                        
+                        bne  $t6, $t7, isNotPalindrome
+                        
+                        #Increment  $t2 by 4 so that it points to the next index
+                        addi $t2, $t2, 4
+                        
+                        #Increment $t1 by 1 
+                        addi $t1, $t1, 1
+                        
+                        j while4
+                end4:
+                
+                isPalindrome:
+                        li $v0, 4
+                        la $a0, message3
+                        syscall
+                        li $v0, 10
+                        syscall
+                
+                
+                isNotPalindrome:
+                        li $v0, 4
+                        la $a0, message4
+                        syscall
+                        li $v0, 10
+                        syscall
+                                                                                                                        
+li $v0, 10
+syscall
+
+
+
+
+
+
+
+
+
+
+#A program that calculates an arithmetic expression
+.data
+        expression: .asciiz "x = a * (b - c) / d\n"
+        message1:   .asciiz "Please enter a: "
+        message2:   .asciiz "Please enter b: "
+        message3:   .asciiz "Please enter c: "
+        message4:   .asciiz "Please enter d: "
+        message5:   .asciiz "x = "
+        
+.text
+        main:
+        
+                #Print expression
+                 li $v0, 4
+                la $a0, expression
+                syscall
+                
+                #Print message1
+                li $v0, 4
+                la $a0, message1
+                syscall
+
+
+                #Get users response for message1
+                li $v0, 5
+                syscall
+                
+                #Store the response in $a1 (a)
+                addi $a1, $v0, 0
+                
+                #Print message2
+                li $v0, 4
+                la $a0, message2
+                syscall
+
+
+                #Get users response for message2
+                li $v0, 5
+                syscall
+                
+                #Store the response in $a2 (b)
+                addi $a2, $v0, 0
+                
+                #Print message3
+                li $v0, 4
+                la $a0, message3
+                syscall
+
+
+                #Get users response for message3
+                li $v0, 5
+                syscall
+                
+                #Store the response in $a3 (c)
+                addi $a3, $v0, 0
+                
+                #Print message4
+                li $v0, 4
+                la $a0, message4
+                syscall
+
+
+                #Get users response for message4
+                li $v0, 5
+                syscall
+                
+                #Store the response in $a0 (d)
+                addi $a0, $v0, 0
+                
+                #Call function
+                jal calculateExpression
+                
+                #Store the result in $t6
+                move $t6, $v0
+                
+                #Print message5
+                li $v0, 4
+                la $a0, message5
+                syscall
+                
+                #Print result
+                li $v0, 1
+                addi $a0, $t6, 0
+                syscall
+                
+        
+        li $v0, 10
+        syscall
+        
+calculateExpression: 
+        
+        sub $t0, $a2, $a3 # (b - c) = $t0
+        mult $t0, $a1 # a * $t0
+        mflo $t1 # $t1 = a * $t0
+        div $t1, $a0 # $t1 / d
+        mfhi $t2  # $t2 = $t1 % d
+        addi $v0, $t2, 0
+        
+    jr $ra
+
+
+
+
+##
+##        Program3.asm is a loop implementation
+##        of the Fibonacci function
+##        
+
+
+#################################
+#                                                 #
+#                text segment                #
+#                                                #
+#################################
+
+
+        .text                
+.globl __start
+ 
+__start:                # execution starts here
+        li $a0,7        # to calculate fib(7)
+        jal fib                # call fib  #flb->fib
+        move $a0,$v0        # print result
+        li $v0, 1
+        syscall         #syscal->syscall
+
+
+        la $a0,endl        # print newline #end->endl
+        li $v0,4
+        syscall          #syscal->syscall
+
+
+        li $v0,10       #100->10 
+        syscall                  #syscal->syscall        # bye bye
+
+
+#------------------------------------------------
+
+
+
+
+fib:        move $v0,$a0        # initialise last element
+        blt $a0,2,done        # fib(0)=0, fib(1)=1 #don->done
+
+
+        li $t0,0        # second last element
+        li $v0,1        # last element
+
+
+loop:        add $t1,$t0,$v0        # get next value #v0->$v0
+        move $t0,$v0        # update second last
+        move $v0,$t1        # update last element
+        sub $a0,$a0,1        # decrement count
+        bgt $a0,1,loop        # exit loop when count=0 #0->1
+done:        jr $ra
+
+
+#################################
+#                                                 #
+#              data segment                #
+#                                                #
+#################################
+
+
+        .data
+endl:        .asciiz "\n"
+
+
+##
+## end of Program3.asm
+
+
+#A program that calculates an arithmetic expression
+.data
+        expression: .asciiz "A= (B*(C MOD D) + C/B) - B\n"
+        message1:   .asciiz "Please enter B: "
+        message2:   .asciiz "Please enter C: "
+        message3:   .asciiz "Please enter D: "
+        message4:   .asciiz "A = "
+        
+        
+.text
+        main:
+        
+                #Print expression
+                 li $v0, 4
+                la $a0, expression
+                syscall
+                
+                #Print message1
+                li $v0, 4
+                la $a0, message1
+                syscall
+
+
+                #Get users response for message1
+                li $v0, 5
+                syscall
+                
+                #Store the response in $a1 (B)
+                addi $a1, $v0, 0
+                
+                #Print message2
+                li $v0, 4
+                la $a0, message2
+                syscall
+
+
+                #Get users response for message2
+                li $v0, 5
+                syscall
+                
+                #Store the response in $a2 (C)
+                addi $a2, $v0, 0
+                
+                #Print message3
+                li $v0, 4
+                la $a0, message3
+                syscall
+
+
+                #Get users response for message3
+                li $v0, 5
+                syscall
+                
+                #Store the response in $a3 (D)
+                addi $a3, $v0, 0
+                
+                
+                #Call function
+                jal calculateExpression
+                
+                #Store the result in $t6
+                move $t6, $v0
+                
+                #Print message5
+                li $v0, 4
+                la $a0, message4
+                syscall
+                
+                #Print result
+                li $v0, 1
+                addi $a0, $t6, 0
+                syscall
+                
+        
+        li $v0, 10
+        syscall
+        
+calculateExpression: 
+        
+        div $a2, $a3 # C MOD D
+        mfhi $t0  # $t0 = C MOD D
+        mult $t0, $a1 # B * (C MOD D)
+        mflo $t1 # $t1 = B * (C MOD D)
+        div $a2, $a1 # C / B
+        mflo $t2 #$t2 = C / B
+        add $t3, $t2, $t1 # $t3 = B * (C MOD D) + C/B
+        sub $t4, $t3, $a1 # t4 =  (B * (C MOD D) + C/B) - B
+        addi $v0, $t4, 0
+        
+    jr $ra
